@@ -6,7 +6,7 @@ namespace Mailmerge\Http\Controllers\V1;
 
 use Mailmerge\Jobs\ProcessBatchMessage;
 use Mailmerge\Http\Requests\BatchRequest;
-use Mailmerge\Services\MailClient;
+use Mailmerge\MailClient;
 
 class SendBatchController
 {

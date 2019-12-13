@@ -2,15 +2,15 @@
 
 namespace Mailmerge\Http\Controllers\V1;
 
-use Mailmerge\Services\MailClient;
-use Mailmerge\Services\Pepipost\PepipostClient;
+use Mailmerge\MailClient;
 use Illuminate\Http\Request;
 use Mailmerge\Jobs\ProcessMailMessage;
-use Laravel\Lumen\Routing\ProvidesConvenienceMethods;
+use Mailmerge\Services\Pepipost\PepipostClient;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class SendMailMessageController
 {
-    use ProvidesConvenienceMethods;
+    use ValidatesRequests;
 
     public function handle(Request $request, MailClient $mailClient)
     {

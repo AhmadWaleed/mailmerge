@@ -2,24 +2,20 @@
 
 namespace Mailmerge\Jobs;
 
-use Mailmerge\Services\MailClient;
-use Mailmerge\Services\BatchMessage;
+use Mailmerge\MailClient;
+use Mailmerge\BatchMessage;
 use Illuminate\Support\Facades\Log;
 
 class ProcessBatchMessage extends Job
 {
     /**
      * The number of times the job may be attempted.
-     *
-     * @var int
      */
-    public $tries = 1;
+    public int $tries = 1;
 
-    /** @var BatchMessage */
-    public $message;
+    public BatchMessage $message;
 
-    /** @var MailClient */
-    public $mailClient;
+    public MailClient $mailClient;
 
     public function __construct(MailClient $mailClient, BatchMessage $message)
     {
