@@ -25,9 +25,9 @@ function get_mail_client($service = null): MailClient
     }
 }
 
-function get_current_service(): string
+function get_client_service(MailClient $client = null): string
 {
-    switch (get_class(app(MailClient::class))) {
+    switch (get_class($client ?: app(MailClient::class))) {
         case MailgunClient::class:
             return 'mailgun';
         case PepipostClient::class:
