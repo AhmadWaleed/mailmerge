@@ -6,7 +6,6 @@ namespace MailMerge\Services\Mailgun;
 
 use MailMerge\MailClient;
 use MailMerge\TemplateFormatter;
-use Illuminate\Support\Arr;
 use Mailgun\Mailgun;
 use MailMerge\BatchMessage;
 use Mailgun\Message\Exceptions\TooManyRecipients;
@@ -39,7 +38,7 @@ class MailgunClient implements MailClient
 
         foreach ($message->recipients() as $recipient) {
             try {
-                $batchMessage->addToRecipient($recipient['email'], Arr::except($recipient, 'email'));
+                $batchMessage->addToRecipient($recipient['email'], $recipient['attributes']);
             } catch (TooManyRecipients $exception) {
                 continue;
             }
