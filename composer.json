@@ -33,7 +33,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "MailMerge\\Tests\\": "tests/"
         }
     },
     "extra": {
