@@ -1,17 +1,15 @@
 <?php
 
-namespace Mailmerge\Services\SendGrid;
+namespace MailMerge\Services\SendGrid;
 
-use Mailmerge\Repositories\MailLogsRepository;
-use Mailmerge\MailClient;
+use MailMerge\MailClient;
 
 class SendGridClientFactory
 {
     public static function make(): MailClient
     {
         return new SendGridClient(
-            new \SendGrid(config('mail.sendgrid.api_key')),
-            app(MailLogsRepository::class)
+            new \SendGrid(config('mailmerge.services.sendgrid.api_key'))
         );
     }
 }

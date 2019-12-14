@@ -1,13 +1,10 @@
 <?php
 
-namespace Mailmerge;
+namespace MailMerge;
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Mailmerge\Repositories\MailLogsRepository;
-use Mailmerge\Repositories\RedisMailLogsRepository;
 
-class MailmergeServiceProvider extends ServiceProvider
+class MailMergeServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any package services.
@@ -16,13 +13,7 @@ class MailmergeServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadRoutesFrom(__DIR__.'/Http/routes.php');
-
         $this->registerPublishing();
-
-        $this->loadViewsFrom(
-            __DIR__.'/../resources/views', 'wink'
-        );
     }
 
     /**
@@ -50,18 +41,6 @@ class MailmergeServiceProvider extends ServiceProvider
             __DIR__.'/../config/mailmerge.php', 'mailmerge'
         );
 
-        $this->registerBindings();
-
-//        $this->commands([
-//            Console\InstallCommand::class,
-//            Console\MigrateCommand::class,
-//        ]);
-    }
-
-    private function registerBindings()
-    {
         $this->app->bind(MailClient::class,  fn() => get_mail_client());
-
-        $this->app->bind(MailLogsRepository::class, RedisMailLogsRepository::class);
     }
 }

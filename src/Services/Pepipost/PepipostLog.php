@@ -1,8 +1,8 @@
 <?php
 
-namespace Mailmerge\Services\Pepipost;
+namespace MailMerge\Services\Pepipost;
 
-use Mailmerge\BaseMailLog;
+use MailMerge\BaseMailLog;
 
 class PepipostLog extends BaseMailLog
 {

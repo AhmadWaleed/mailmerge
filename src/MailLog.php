@@ -1,6 +1,6 @@
 <?php
 
-namespace Mailmerge;
+namespace MailMerge;
 
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Mailmerge\Services\Pepipost;
+namespace MailMerge\Services\Pepipost;
 
-use Mailmerge\TemplateFormatter;
+use MailMerge\TemplateFormatter;
 
 class PepipostTemplateFormatter extends TemplateFormatter
 {

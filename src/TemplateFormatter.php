@@ -1,10 +1,10 @@
 <?php
 
-namespace Mailmerge;
+namespace MailMerge;
 
-use Mailmerge\Services\Mailgun\MailgunTemplateFormatter;
-use Mailmerge\Services\Pepipost\PepipostTemplateFormatter;
-use Mailmerge\Services\SendGrid\SendGridTemplateFormatter;
+use MailMerge\Services\Mailgun\MailgunTemplateFormatter;
+use MailMerge\Services\Pepipost\PepipostTemplateFormatter;
+use MailMerge\Services\SendGrid\SendGridTemplateFormatter;
 
 abstract class TemplateFormatter
 {

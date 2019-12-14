@@ -1,8 +1,8 @@
 <?php
 
-namespace Mailmerge\Services\Mailgun;
+namespace MailMerge\Services\Mailgun;
 
-use Mailmerge\BaseMailLog;
+use MailMerge\BaseMailLog;
 
 class MailgunLog extends BaseMailLog
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Mailmerge;
+namespace MailMerge;
 
 abstract class BaseMailLog implements MailLog
 {
-    protected $normalizedResponse;
+    protected array $normalizedResponse;
 
-    protected $originalResponse = [];
+    protected array $originalResponse = [];
 
     /**
      * Get the instance as an array.

@@ -1,6 +1,6 @@
 {
     "name": "ahmedwaleed/mailmerge",
-    "description": "",
+    "description": "This library provides handful of api's send all sorts of email using different mail services",
     "type": "library",
     "authors": [
         {
@@ -27,9 +27,9 @@
     },
     "autoload": {
         "psr-4": {
-            "Mailmerge\\": "src/"
+            "MailMerge\\": "src/"
         },
-        "files": ["src/Support/helpers.php"]
+        "files": ["src/helpers.php"]
     },
     "autoload-dev": {
         "psr-4": {
@@ -39,7 +39,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Mailmerge\\MailmergeServiceProvider"
+                "MailMerge\\MailMergeServiceProvider"
             ]
         }
     },

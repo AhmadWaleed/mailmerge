@@ -1,8 +1,8 @@
 <?php
 
-namespace Mailmerge\Services\Mailgun;
+namespace MailMerge\Services\Mailgun;
 
-use Mailmerge\TemplateFormatter;
+use MailMerge\TemplateFormatter;
 
 class MailgunTemplateFormatter extends TemplateFormatter
 {

@@ -1,17 +1,17 @@
 <?php
 
-use Mailmerge\MailClient;
-use Mailmerge\Services\Mailgun\MailgunClient;
-use Mailmerge\Services\Mailgun\MailgunClientFactory;
-use Mailmerge\Services\Pepipost\PepipostClient;
-use Mailmerge\Services\Pepipost\PepipostClientFactory;
-use Mailmerge\Services\SendGrid\SendGridClient;
-use Mailmerge\Services\SendGrid\SendGridClientFactory;
+use MailMerge\MailClient;
 use Illuminate\Support\Str;
+use MailMerge\Services\Mailgun\MailgunClient;
+use MailMerge\Services\Mailgun\MailgunClientFactory;
+use MailMerge\Services\Pepipost\PepipostClient;
+use MailMerge\Services\Pepipost\PepipostClientFactory;
+use MailMerge\Services\SendGrid\SendGridClient;
+use MailMerge\Services\SendGrid\SendGridClientFactory;
 
 function get_mail_client($service = null): MailClient
 {
-    $service = $service ?: config('mailmerge.default_service');
+    $service = $service ?: config('mailmerge.services.default');
 
     switch ($service) {
         case 'mailgun':

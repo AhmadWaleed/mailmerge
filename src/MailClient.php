@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mailmerge;
+namespace MailMerge;
 
 interface MailClient
 {
@@ -19,11 +19,10 @@ interface MailClient
      * Send batch message
      *
      * @param BatchMessage $message batch message object
-     * @param bool $resend determines if resending batch message
      *
      * @return void
      */
-    public function sendBatch(BatchMessage $message, bool $resend = false): void;
+    public function sendBatch(BatchMessage $message): void;
 
     /**
      * Resend batch message for failed messages

@@ -2,25 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Mailmerge\Services\Mailgun;
+namespace MailMerge\Services\Mailgun;
 
-use Mailmerge\Batch;
-use Mailmerge\MailClient;
-use Mailmerge\TemplateFormatter;
+use MailMerge\MailClient;
+use MailMerge\TemplateFormatter;
 use Illuminate\Support\Arr;
 use Mailgun\Mailgun;
-use Mailmerge\BatchMessage;
-use Mailgun\Message\Exceptions\MissingRequiredParameter;
+use MailMerge\BatchMessage;
 use Mailgun\Message\Exceptions\TooManyRecipients;
 use Mailgun\Model\Event\Event;
 
 class MailgunClient implements MailClient
 {
-    /** @var Mailgun */
-    protected $mailgun;
+    protected Mailgun $mailgun;
 
-    /** @var string */
-    protected $domain;
+    protected string $domain;
 
     public function __construct(Mailgun $mailgun, string $domain)
     {
@@ -28,16 +24,7 @@ class MailgunClient implements MailClient
         $this->mailgun = $mailgun;
     }
 
-    /**
-     * Send batch emails
-     *
-     * @param BatchMessage $message
-     * @param bool $resend
-     *
-     * @return void
-     * @throws MissingRequiredParameter
-     */
-    public function sendBatch(BatchMessage $message, bool $resend = false): void
+    public function sendBatch(BatchMessage $message): void
     {
         /** @var \Mailgun\Message\BatchMessage $batchMessage */
         $batchMessage = $this->mailgun->messages()
@@ -63,10 +50,6 @@ class MailgunClient implements MailClient
         [$messageId] = $batchMessage->getMessageIds();
 
         $message->setBatchIdentifier(trim($messageId, '<>'));
-
-        if (! $resend) {
-            Batch::record($message, 'mailgun');
-        }
     }
 
     public function sendMessage(array $parameters): void
@@ -130,6 +113,6 @@ class MailgunClient implements MailClient
 
         $batchMessage->setToRecipients($recipients->toArray());
 
-        $client->sendBatch($batchMessage, true);
+        $client->sendBatch($batchMessage);
     }
 }

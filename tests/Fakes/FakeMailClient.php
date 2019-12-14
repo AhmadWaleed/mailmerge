@@ -2,8 +2,8 @@
 
 namespace Tests;
 
-use Mailmerge\BatchMessage;
-use Mailmerge\MailClient;
+use MailMerge\BatchMessage;
+use MailMerge\MailClient;
 
 class FakeMailClient implements MailClient
 {

@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Mailmerge;
+namespace MailMerge;
 
 class BatchMessage implements \Serializable
 {
-    protected $from;
-    protected $subject;
-    protected $body;
-    protected $batchHash;
-    protected $recipients;
-    protected $batchIdentifier;
-    protected $attachments = [];
+    protected string $from;
+    protected string $subject;
+    protected string $body;
+    protected string $batchHash;
+    protected array $recipients;
+    protected string $batchIdentifier;
+    protected array $attachments = [];
 
     public function setFromAddress(string $from)
     {

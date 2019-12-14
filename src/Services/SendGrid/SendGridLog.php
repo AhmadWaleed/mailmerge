@@ -1,8 +1,8 @@
 <?php
 
-namespace Mailmerge\Services\SendGrid;
+namespace MailMerge\Services\SendGrid;
 
-use Mailmerge\BaseMailLog;
+use MailMerge\BaseMailLog;
 
 class SendGridLog extends BaseMailLog
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Mailmerge\Services\SendGrid;
+namespace MailMerge\Services\SendGrid;
 
-use Mailmerge\TemplateFormatter;
+use MailMerge\TemplateFormatter;
 
 class SendGridTemplateFormatter extends TemplateFormatter
 {

@@ -2,13 +2,13 @@
 
 namespace Tests;
 
-use Mailmerge\MailmergeServiceProvider;
+use MailMerge\MailMergeServiceProvider;
 
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
     protected function getPackageProviders($app)
     {
-        return [MailmergeServiceProvider::class];
+        return [MailMergeServiceProvider::class];
     }
 
     public function authHeaders()

@@ -1,11 +1,10 @@
 <?php
 
-namespace Mailmerge\Services\Pepipost;
+namespace MailMerge\Services\Pepipost;
 
-use Mailmerge\Batch;
-use Mailmerge\BatchMessage;
-use Mailmerge\MailClient;
-use Mailmerge\TemplateFormatter;
+use MailMerge\BatchMessage;
+use MailMerge\MailClient;
+use MailMerge\TemplateFormatter;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Arr;
@@ -13,11 +12,9 @@ use Illuminate\Support\Facades\Log;
 
 class PepipostClient implements MailClient
 {
-    /** @var Client */
-    protected $client;
+    protected Client $client;
 
-    /** @var string */
-    protected $apiKey;
+    protected string $apiKey;
 
     public function __construct(Client $client, string $apiKey)
     {
@@ -39,7 +36,7 @@ class PepipostClient implements MailClient
         ]);
     }
 
-    public function sendBatch(BatchMessage $message, bool $resend = false): void
+    public function sendBatch(BatchMessage $message): void
     {
         $message->setBatchIdentifier(md5(microtime().rand()));
 
@@ -51,10 +48,6 @@ class PepipostClient implements MailClient
             'attachments' => $this->attachments($message->attachments()),
             'settings' => $this->settings(),
         ]);
-
-        if (! $resend) {
-            Batch::record($message, 'pepipost');
-        }
     }
 
     private function personalizations(BatchMessage $message): array
@@ -158,6 +151,6 @@ class PepipostClient implements MailClient
 
         $message->setToRecipients($recipients->toArray());
 
-        $client->sendBatch($message, true);
+        $client->sendBatch($message);
     }
 }
