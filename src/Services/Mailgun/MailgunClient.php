@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace MailMerge\Services\Mailgun;
 
+use MailMerge\Attachment;
 use MailMerge\MailClient;
 use MailMerge\TemplateFormatter;
 use Mailgun\Mailgun;
 use MailMerge\BatchMessage;
 use Mailgun\Message\Exceptions\TooManyRecipients;
 use Mailgun\Model\Event\Event;
+use Spatie\TemporaryDirectory\TemporaryDirectory;
 
 class MailgunClient implements MailClient
 {
@@ -53,20 +55,22 @@ class MailgunClient implements MailClient
 
     public function sendMessage(array $parameters): void
     {
+        $filePath = null;
         $attachment = null;
 
         if (isset($parameters['attachment'])) {
-            $attachment = get_attachment_from_url($parameters['attachment']);
+            $attachment = new Attachment();
+            $filePath = $attachment->fromUrl($parameters['attachment'])->save();
         }
 
-        $message = collect($parameters)->mapWithKeys(function ($value, $key) use ($attachment) {
+        $message = collect($parameters)->mapWithKeys(function ($value, $key) use ($filePath) {
             if ($key === 'body') {
                 return ['text' => $value];
             }
 
-            if ($key === 'attachment' && ! is_null($attachment)) {
+            if ($key === 'attachment' && ! is_null($filePath)) {
                 return [$key => [[
-                    'filePath' => $attachment,
+                    'filePath' => $filePath,
                     'filename' => get_filename($value)
                 ]]];
             }
@@ -77,8 +81,8 @@ class MailgunClient implements MailClient
         try {
             $this->mailgun->messages()->send($this->domain, $message->toArray());
         } finally {
-            if (isset($attachment) && file_exists($attachment)) {
-                unlink($attachment);
+            if (! is_null($attachment)) {
+                $attachment->getDirectory()->delete();
             }
         }
     }

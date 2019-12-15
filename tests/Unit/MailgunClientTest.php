@@ -31,6 +31,17 @@ class MailgunClientTest extends TestCase
         $this->mailgunClient = new MailgunClient($this->mailgun, $this->domain);
     }
 
+    private function parameters(array $extras = [])
+    {
+        return [
+            "from" => "jhon.snow@thewall.north",
+            "subject" => "Hey John",
+            "body" => "Test email body.",
+            "to" => "john.doe@example.com",
+            ...$extras
+        ];
+    }
+
     /** @test */
     public function it_sends_batch_message()
     {
@@ -74,11 +85,13 @@ class MailgunClientTest extends TestCase
     /** @test */
     public function it_sends_mail_message()
     {
-        $parameters = [
-            "from" => "jhon.snow@thewall.north",
-            "subject" => "Hey John",
-            "body" => "Test email body.",
-            "to" => "john.doe@example.com",
-        ];
+        $messages = m::mock(Message::class);
+        $messages->shouldReceive('send')->andReturn(true);
+
+        $this->mailgun->shouldReceive('messages')->andReturn($messages);
+
+        $this->mailgunClient->sendMessage($this->parameters());
+
+        $this->assertTrue(true);
     }
 }
