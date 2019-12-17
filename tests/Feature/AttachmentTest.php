@@ -12,7 +12,6 @@ class AttachmentTest extends TestCase
     public function it_saves_attachment_from_url()
     {
         $attachment = new Attachment();
-
         $attachment->fromUrl('http://www.africau.edu/images/default/sample.pdf');
 
         try {

@@ -7,13 +7,13 @@ use Spatie\TemporaryDirectory\TemporaryDirectory;
 
 class Attachment
 {
-    private TemporaryDirectory $temporaryDirectory;
-
     private string $url;
+
+    private string $prefix = '';
 
     private bool $usePrefixAsName = false;
 
-    private string $prefix = '';
+    private TemporaryDirectory $temporaryDirectory;
 
     public function __construct()
     {
@@ -22,7 +22,7 @@ class Attachment
 
     public function fromUrl(string $url): self
     {
-        list($status) = get_headers($url);
+        [$status] = get_headers($url);
 
         if (strpos($status, '200') === false) {
             throw new \InvalidArgumentException("Inaccessible attachment url!");

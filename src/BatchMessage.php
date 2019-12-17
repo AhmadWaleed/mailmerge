@@ -11,7 +11,7 @@ class BatchMessage implements \Serializable
     protected string $body;
     protected string $batchHash;
     protected array $recipients;
-    protected string $batchIdentifier;
+    protected ?string $batchIdentifier = null;
     protected array $attachments = [];
 
     public function setFromAddress(string $from)
@@ -82,11 +82,13 @@ class BatchMessage implements \Serializable
         return $this->attachments;
     }
 
-    public function setBatchIdentifier($batchIdentifier, $override = false): void
+    public function setBatchIdentifier($batchIdentifier, $override = false)
     {
         if ($override) {
             $this->batchIdentifier = $batchIdentifier;
         }
+
+        return $this;
     }
 
     public function batchIdentifier()

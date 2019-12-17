@@ -2,15 +2,17 @@
 
 namespace Mailmerge\Tests\Unit;
 
+use Mailgun\Api\Event;
 use Mailgun\Api\Message;
 use Mailgun\Mailgun;
 use Mailgun\Message\MessageBuilder;
-use MailMerge\BatchMessage;
+use Mailgun\Model\Event\Event as MailgunEvent;
 use MailMerge\Services\Mailgun\MailgunClient;
+use MailMerge\Tests\BaseTestCase;
+use MailMerge\Tests\Fakes\FakeClient;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
 
-class MailgunClientTest extends TestCase
+class MailgunClientTest extends BaseTestCase
 {
     /**
      * @var Mailgun|m\LegacyMockInterface|m\MockInterface
@@ -29,17 +31,6 @@ class MailgunClientTest extends TestCase
         $this->domain = 'http://test.mailgun.com';
 
         $this->mailgunClient = new MailgunClient($this->mailgun, $this->domain);
-    }
-
-    private function parameters(array $extras = [])
-    {
-        return [
-            "from" => "jhon.snow@thewall.north",
-            "subject" => "Hey John",
-            "body" => "Test email body.",
-            "to" => "john.doe@example.com",
-            ...$extras
-        ];
     }
 
     /** @test */
@@ -61,21 +52,7 @@ class MailgunClientTest extends TestCase
 
         $this->mailgun->shouldReceive('messages')->andReturn($messages);
 
-        $message = new BatchMessage();
-        $message->setFromAddress('john@example.com');
-        $message->setSubject('Test Subject');
-        $message->setTextBody('Test Body.');
-        $message->setToRecipients([
-                [
-                    "email" => "john.doe@example.com",
-                    'attributes' => ["first" => "John", "last" => "Doe", "id" => "1"]
-                ],
-                [
-                    "email" => "jane.doe@example.com",
-                    'attributes' => ["first" => "Jane", "last" => "Doe", "id" => "2"]
-                ]
-        ]);
-        $message->addAttachments(['http://site.attachment1.txt', 'http://site.attachment1.pdf']);
+        $message = $this->fakeBatchMessage();
 
         $this->mailgunClient->sendBatch($message);
 
@@ -93,5 +70,51 @@ class MailgunClientTest extends TestCase
         $this->mailgunClient->sendMessage($this->parameters());
 
         $this->assertTrue(true);
+    }
+
+    /** @test */
+    public function it_resend_batch_message()
+    {
+        $message = $this->fakeBatchMessage();
+
+        $eventsResponse = [
+            MailgunEvent::create([
+                'event' => 'failed',
+                'id' => rand(1, 5),
+                'timestamp' => time(),
+                'envelope' => ['targets' => 'john@example.com']
+            ]),
+            MailgunEvent::create([
+                'event' => 'rejected',
+                'id' => rand(1, 5),
+                'timestamp' => time(),
+                'envelope' => ['targets' => 'jane@example.com']
+            ])
+        ];
+
+        $events = m::mock(Event::class, ['get' => m::mock(['getItems' => $eventsResponse])]);
+
+        $this->mailgun->shouldReceive('events')->andReturn($events);
+
+        $mailClient = new FakeClient();
+
+        $this->mailgunClient->resendBatch($message, $mailClient);
+    }
+
+    /** @test */
+    public function it_except_when_there_is_no_failed_recipient_while_resending()
+    {
+        $message = $this->fakeBatchMessage();
+
+        $events = m::mock(Event::class, ['get' => m::mock(['getItems' => []])]);
+
+        $this->mailgun->shouldReceive('events')->andReturn($events);
+
+        $mailClient = new FakeClient();
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('No failed recipients found against given batch message');
+
+        $this->mailgunClient->resendBatch($message, $mailClient);
     }
 }
