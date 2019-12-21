@@ -9,7 +9,7 @@ class BatchMessage implements \Serializable
     protected string $from;
     protected string $subject;
     protected string $body;
-    protected string $batchHash;
+    protected ?string $batchHash = null;
     protected array $recipients;
     protected ?string $batchIdentifier = null;
     protected array $attachments = [];

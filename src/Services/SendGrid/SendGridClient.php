@@ -23,9 +23,11 @@ class SendGridClient implements MailClient
     {
         $this->sendGridClient = $sendGridClient;
 
-        $this->apiKey = config('services.sendgrid.api_endpoint', 'https://api.sendgrid.com/v3');
+        $this->apiKey = config('mailmerge.services.sendgrid.api_key');
 
-        $this->client = new Client(['base_uri' => $this->apiKey]);
+        $this->client = new Client([
+            'base_uri' => config('mailmerge.services.sendgrid.api_endpoint', 'https://api.sendgrid.com/v3')
+        ]);
     }
 
     public function sendMessage(array $parameters): void
@@ -100,11 +102,15 @@ class SendGridClient implements MailClient
         $queryString = "(status='not_delivered' OR status='bounced') AND (unique_args['".self::BATCH_IDENTIFIER_ARG."']='{$message->batchIdentifier()}')";
         $query = urlencode($queryString);
 
-        $response = $this->client->request('GET', "/messages?{$query}&limit=" . count($message->recipients()), [
-            'headers' => [
-                'Authorization' => "Bearer {$this->apiKey}"
-            ]
-        ]);
+        try {
+            $response = $this->client->request('GET', "/v3/messages?query={$query}&limit=" . count($message->recipients()), [
+                'headers' => [
+                    'Authorization' => "Bearer {$this->apiKey}"
+                ]
+            ]);
+        } catch (\Exception $e) {
+            throw new \Exception("Cannot resend batch message failed to get failed recipients: {$e->getMessage()}");
+        }
 
         $decodedResponse = json_decode($response->getBody(), true);
 
@@ -123,6 +129,11 @@ class SendGridClient implements MailClient
         $message->setToRecipients($recipients->toArray());
 
         $client->sendBatch($message);
+    }
+
+    private function getFailedMessages()
+    {
+
     }
 
     public function mapKeys(array $attributes): array

@@ -21,8 +21,7 @@
         "sendgrid/sendgrid": "^7.3",
         "symfony/psr-http-message-bridge": "^1.2",
         "illuminate/support": "^6.7",
-        "spatie/temporary-directory": "^1.2",
-        "illuminate/foundation": "^1.1"
+        "spatie/temporary-directory": "^1.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^8",
