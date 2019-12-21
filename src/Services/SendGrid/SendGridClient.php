@@ -131,11 +131,6 @@ class SendGridClient implements MailClient
         $client->sendBatch($message);
     }
 
-    private function getFailedMessages()
-    {
-
-    }
-
     public function mapKeys(array $attributes): array
     {
         return collect($attributes)->mapWithKeys(function ($value, $key) {
