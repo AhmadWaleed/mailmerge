@@ -1,6 +1,6 @@
 <?php
 
-namespace Mailmerge\Tests\Unit;
+namespace Mailmerge\Tests\Unit\Mailgun;
 
 use Mailgun\Api\Event;
 use Mailgun\Api\Message;

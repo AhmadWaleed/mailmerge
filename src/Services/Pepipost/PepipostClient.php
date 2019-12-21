@@ -26,7 +26,10 @@ class PepipostClient implements MailClient
     {
         $this->request('sendEmail', [
             'personalizations' => [
-                ['recipient' => $parameters['to']]
+                [
+                    'recipient' => $parameters['to'],
+                    'recipient_cc' => [$parameters['cc'] ?? []],
+                ]
             ],
             'from' => $this->from($parameters['from']),
             'subject' => $parameters['subject'],

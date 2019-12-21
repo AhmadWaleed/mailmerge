@@ -12,7 +12,7 @@ abstract class TemplateFormatter
     public const PEPIPOST = PepipostTemplateFormatter::class;
     public const SENDGRID = SendGridTemplateFormatter::class;
 
-    protected const PATTERNS = ['/<\s*%/', '/attribute./', '/%\s*>/'];
+    protected const PATTERNS = ['/<\s*%\s*/', '/attribute./', '/\s*%\s*>/'];
 
     abstract public function format(string $body): string;
 }

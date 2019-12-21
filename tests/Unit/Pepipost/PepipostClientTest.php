@@ -1,6 +1,6 @@
 <?php
 
-namespace Mailmerge\Tests\Unit;
+namespace Mailmerge\Tests\Unit\Pepipost;
 
 use GuzzleHttp\Client;
 use MailMerge\Services\Pepipost\PepipostClient;
