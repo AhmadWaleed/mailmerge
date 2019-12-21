@@ -93,6 +93,10 @@ class BatchMessage implements \Serializable
 
     public function batchIdentifier()
     {
+        if (! $this->batchIdentifier) {
+            return $this->batchIdentifier = md5(microtime().rand());
+        }
+
         return $this->batchIdentifier;
     }
 

@@ -60,7 +60,7 @@ class PepipostClient implements MailClient
         foreach ($message->recipients() as $recipient) {
             $personalizations[] = [
                 'recipient' => $recipient['email'],
-                'attributes' => Arr::except($recipient, 'email'),
+                'attributes' => $recipient['attributes'],
                 'x-apiheader' => $message->batchIdentifier(),
             ];
         }
@@ -100,7 +100,7 @@ class PepipostClient implements MailClient
     private function request($uri, $payload, string $method = 'POST'): bool
     {
         try {
-            $this->client->request($method, $uri, array_merge(['json' => $payload,], $this->authHeader()));
+            $this->client->request($method, $uri, array_merge(['json' => $payload], $this->authHeader()));
 
             return true;
         } catch (GuzzleException $e) {

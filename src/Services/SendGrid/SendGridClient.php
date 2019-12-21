@@ -2,8 +2,8 @@
 
 namespace MailMerge\Services\SendGrid;
 
+use GuzzleHttp\Client;
 use SendGrid\Mail\Mail;
-use Illuminate\Support\Arr;
 use MailMerge\MailClient;
 use SendGrid\Mail\Attachment;
 use MailMerge\BatchMessage;
@@ -11,11 +11,21 @@ use MailMerge\TemplateFormatter;
 
 class SendGridClient implements MailClient
 {
+    public const BATCH_IDENTIFIER_ARG = 'batch_identifier_arg';
+
     private \SendGrid $sendGridClient;
+
+    private Client $client;
+
+    private string $apiKey;
 
     public function __construct(\SendGrid $sendGridClient)
     {
         $this->sendGridClient = $sendGridClient;
+
+        $this->apiKey = config('services.sendgrid.api_endpoint', 'https://api.sendgrid.com/v3');
+
+        $this->client = new Client(['base_uri' => $this->apiKey]);
     }
 
     public function sendMessage(array $parameters): void
@@ -28,6 +38,18 @@ class SendGridClient implements MailClient
         $email->addTo($parameters['to']);
         $email->setSubject($parameters['subject']);
         $email->addContent('text/plain', $parameters['body']);
+
+        if (isset($parameters['cc'])) {
+            foreach (explode(',', $parameters['cc']) as $ccEmail) {
+                $email->addCc(trim($ccEmail));
+            }
+        }
+
+        if (isset($parameters['bcc'])) {
+            foreach (explode(',', $parameters['bcc']) as $bccEmail) {
+                $email->addBcc(trim($bccEmail));
+            }
+        }
 
         if (isset($parameters['attachment'])) {
             $email->addAttachment(new Attachment(
@@ -52,7 +74,7 @@ class SendGridClient implements MailClient
 
         $message->setBatchIdentifier(md5(microtime().rand()));
 
-        $batch->setBatchId($message->batchIdentifier());
+        $batch->addCustomArg(self::BATCH_IDENTIFIER_ARG, $message->batchIdentifier());
 
         $batch->setFrom($message->from());
         $batch->setSubject($message->subject(TemplateFormatter::SENDGRID));
@@ -61,39 +83,46 @@ class SendGridClient implements MailClient
         foreach ($message->recipients() as $recipient) {
             $email = $recipient['email'];
             $name = strtok($email, '@');
-            $batch->addTo($email, $name, $this->mapKeys(Arr::except($recipient, 'email')));
+            $batch->addTo($email, $name, $this->mapKeys($recipient['attributes']));
         }
 
         foreach ($message->attachments() as $attachment) {
             $batch->addAttachment(base64_encode(file_get_contents($attachment)));
         }
 
+        $batch->addCustomArg('batch_identifier', 'custom_batch_arg');
+
         $this->sendGridClient->send($batch);
     }
 
     public function resendBatch(BatchMessage $message, MailClient $client, array $options = []): void
     {
-//        $logs = $this->logsRepository->getLogs(RedisMailLogs::FIRST, RedisMailLogs::LAST, 'sendgrid_failed:logs');
+        $queryString = "(status='not_delivered' OR status='bounced') AND (unique_args['".self::BATCH_IDENTIFIER_ARG."']='{$message->batchIdentifier()}')";
+        $query = urlencode($queryString);
 
-//        $failedRecipients = collect($logs)->map(function ($log) {
-//            return data_get(json_decode($log, true), 'normalized_response.to_email');
-//        });
-//
-//        if ($failedRecipients->isEmpty()) {
-//            throw new \RuntimeException('No failed recipients found against given batch message');
-//        }
-//
-//        $recipients = collect($message->recipients())->reject(function ($recipient) use ($failedRecipients) {
-//            return ! in_array($recipient['email'], $failedRecipients->toArray());
-//        });
+        $response = $this->client->request('GET', "/messages?{$query}&limit=" . count($message->recipients()), [
+            'headers' => [
+                'Authorization' => "Bearer {$this->apiKey}"
+            ]
+        ]);
 
-//        $message->setToRecipients($recipients->toArray());
+        $decodedResponse = json_decode($response->getBody(), true);
 
-        // delete failed logs next time failed logs list does not
-        // contains failed logs from previous sent batch
-//        $this->logsRepository->deleteKey('sendgrid_failed:logs');
+        $failedRecipients = collect($decodedResponse['messages'])->map(function ($message) {
+            return $message['to_email'];
+        });
 
-//        $client->sendBatch($message);
+        if ($failedRecipients->isEmpty()) {
+            throw new \RuntimeException('No failed recipients found against given batch message');
+        }
+
+        $recipients = collect($message->recipients())->reject(function ($recipient) use ($failedRecipients) {
+            return ! in_array($recipient['email'], $failedRecipients->toArray());
+        });
+
+        $message->setToRecipients($recipients->toArray());
+
+        $client->sendBatch($message);
     }
 
     public function mapKeys(array $attributes): array
