@@ -92,8 +92,6 @@ class SendGridClient implements MailClient
             $batch->addAttachment(base64_encode(file_get_contents($attachment)));
         }
 
-        $batch->addCustomArg('batch_identifier', 'custom_batch_arg');
-
         $this->sendGridClient->send($batch);
     }
 
@@ -114,9 +112,13 @@ class SendGridClient implements MailClient
 
         $decodedResponse = json_decode($response->getBody(), true);
 
-        $failedRecipients = collect($decodedResponse['messages'])->map(function ($message) {
-            return $message['to_email'];
-        });
+        $failedRecipients = collect($decodedResponse['messages'])->map(fn ($message) => $message['to_email']);
+
+        $messageRecipients = collect($message->recipients())->map(fn ($recipient) => $recipient['email']);
+
+        $failedRecipients = $failedRecipients->reject(
+            fn ($recipient) => ! in_array($recipient, $messageRecipients->toArray())
+        );
 
         if ($failedRecipients->isEmpty()) {
             throw new \RuntimeException('No failed recipients found against given batch message');
