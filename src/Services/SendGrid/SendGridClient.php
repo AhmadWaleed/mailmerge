@@ -19,13 +19,13 @@ class SendGridClient implements MailClient
 
     private string $apiKey;
 
-    public function __construct(\SendGrid $sendGridClient)
+    public function __construct(\SendGrid $sendGridClient, ?Client $client = null)
     {
         $this->sendGridClient = $sendGridClient;
 
         $this->apiKey = config('mailmerge.services.sendgrid.api_key');
 
-        $this->client = new Client([
+        $this->client = $client ?: new Client([
             'base_uri' => config('mailmerge.services.sendgrid.api_endpoint', 'https://api.sendgrid.com/v3')
         ]);
     }
