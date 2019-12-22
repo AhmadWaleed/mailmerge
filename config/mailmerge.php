@@ -1,7 +1,6 @@
 <?php
 return [
     'services' => [
-        'default' => env('DEFAULT_SERVICE', 'mailgun'),
         'mailgun' => [
             'api_key' => env('MAILGUN_API_KEY'),
             'api_domain' => env('MAILGUN_API_DOMAIN'),

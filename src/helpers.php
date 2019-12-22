@@ -12,8 +12,6 @@ use MailMerge\Services\SendGrid\SendGridClientFactory;
 
 function get_mail_client($service = null): MailClient
 {
-    $service = $service ?: config('mailmerge.services.default');
-
     switch ($service) {
         case 'mailgun':
             return MailgunClientFactory::make();
