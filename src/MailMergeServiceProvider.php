@@ -40,7 +40,5 @@ class MailMergeServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             __DIR__.'/../config/mailmerge.php', 'mailmerge'
         );
-
-        $this->app->bind(MailClient::class,  fn() => get_mail_client());
     }
 }
