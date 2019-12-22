@@ -2,6 +2,7 @@
 
 use MailMerge\MailClient;
 use Illuminate\Support\Str;
+use MailMerge\NullableMailClient;
 use MailMerge\Services\Mailgun\MailgunClient;
 use MailMerge\Services\Mailgun\MailgunClientFactory;
 use MailMerge\Services\Pepipost\PepipostClient;
@@ -21,7 +22,7 @@ function get_mail_client($service = null): MailClient
         case 'sendgrid':
             return SendGridClientFactory::make();
         default:
-            throw new \RuntimeException('No mail service configured!');
+            return new NullableMailClient();
     }
 }
 
@@ -35,7 +36,7 @@ function get_client_service(MailClient $client = null): string
         case SendGridClient::class:
             return 'sendgrid';
         default:
-            throw new \RuntimeException('No service is currently active!');
+            throw new \RuntimeException('Un supported service.');
     }
 }
 
