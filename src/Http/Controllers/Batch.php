@@ -3,10 +3,8 @@
 namespace MailMerge;
 
 use Carbon\Carbon;
-use MailMerge\BatchMessage;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use MailMerge\MailClient;
 
 class Batch extends Model
 {
