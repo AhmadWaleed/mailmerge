@@ -1,5 +1,9 @@
+## Introduction
+The mail service is meant to provide a handful of APIs to send all sorts of emails including (batch mails, single mail) using different mail service providers such as mailgun, pepipost, and sendgrid. It also defines the strategy for resending the failed emails using different mail services.
+
 ## Installation
-First add package as a repository in composer.json file.
+
+Add package as a repository in composer.json file.
 
 ```
 "repositories": [
@@ -10,12 +14,34 @@ First add package as a repository in composer.json file.
 ]
 ```
 
-Now you can install MailMerge via composer using the following command:
+now require mailmerge package and run `composer update`
 
 ```sh
-composer require ahmedwaleed/mailmerge
+"require": {
+    "ahmedwaleed/mailmerge": "dev-master"
+},
 ```
-MailMerge will automatically register itself using [package discovery](https://laravel.com/docs/packages#package-discovery)
+MailMerge will automatically register itself using [package discovery](https://laravel.com/docs/packages#package-discovery).
 
+Once Composer is done, run the following command, it will migrate mailmerge migrations:
+
+```sh
+php artisan mailmerge:migrate
+```
 ## Requirements
-Mailmerge requires a Laravel application running version 6.0 or higher and php minimum php 7.4
+- PHP >= 7.4
+- Laravel >= 6.0
+- Redis
+
+#Usage
+You can use any http client to make api calls but for simplicity we recommend [guzzle](https://github.com/guzzle/guzzle), you can install it by running `composer require guzzlehttp/guzzle`
+
+## Authentication
+You must pass an authorization signature in headers when calling APIs.
+```json
+"headers": {
+    "signature": "90gMPhN7Q3bQYJgFGZufYo7y6DLSSDDurEvFO4EFksA="
+}
+```
+
+## Send Email Message

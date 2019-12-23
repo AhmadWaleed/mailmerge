@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use MailMerge\Repositories\MailLogsRepository;
 use Illuminate\Support\Facades\Log;
 
-class ClearLogs extends Command
+class ClearLogsCommand extends Command
 {
     protected $signature = 'clear:logs';
 

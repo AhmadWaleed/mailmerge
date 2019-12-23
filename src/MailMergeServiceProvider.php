@@ -96,7 +96,7 @@ class MailMergeServiceProvider extends ServiceProvider
         );
 
         $this->commands([
-            Console\ClearLogs::class,
+            Console\ClearLogsCommand::class,
         ]);
     }
 }
