@@ -5,6 +5,8 @@ namespace MailMerge;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use MailMerge\Console\ClearLogsCommand;
+use MailMerge\Console\MigrateCommand;
 use MailMerge\Http\Middleware\ApiAuth;
 use MailMerge\Http\Middleware\ClientSwitcher;
 use Mailmerge\Http\Middleware\VerifyMailgunWebhook;
@@ -43,7 +45,7 @@ class MailMergeServiceProvider extends ServiceProvider
             ->as('mailmerge.')
             ->prefix($path)
             ->group(function () {
-                Route::get('/resend-batch', 'ResendBatchController@handle')->name('batch.resend');
+                Route::post('/resend-batch', 'ResendBatchController@handle')->name('batch.resend');
             });
 
         Route::namespace('MailMerge\Http\Controllers\Api')
@@ -98,7 +100,8 @@ class MailMergeServiceProvider extends ServiceProvider
         );
 
         $this->commands([
-            Console\ClearLogsCommand::class,
+            ClearLogsCommand::class,
+            MigrateCommand::class
         ]);
     }
 }

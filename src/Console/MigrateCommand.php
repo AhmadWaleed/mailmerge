@@ -31,6 +31,6 @@ class MigrateCommand extends Command
 
         $this->line('');
         $this->line('');
-        $this->line('MailMerge migrations ran successfully.');
+        $this->info('MailMerge migrations ran successfully.');
     }
 }

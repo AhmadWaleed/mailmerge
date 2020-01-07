@@ -3,18 +3,18 @@ The mail service is meant to provide a handful of APIs to send all sorts of emai
 
 ## Installation
 
-Add package as a repository in composer.json file.
+Add package in your composer.json repositories
 
 ```
 "repositories": [
     {
-        "type": "vcs",
-        "url": "git@github.com:AhmadWaleed/mailmerge.git"
+        "type": "path",
+        "url": "./path-to-your-local-package"
     }
 ]
 ```
 
-now require mailmerge package and run `composer update`
+now add package in your composer.json require packages and run `composer update`
 
 ```sh
 "require": {
@@ -33,11 +33,21 @@ php artisan mailmerge:migrate
 - Laravel >= 6.0
 - Redis
 
-#Usage
-This package registered all api endpoint you need, run `php artisan route:list` to see all available endpoints.
-```
+MailMerge uses redis for saving events and logs so you must have redis install on your host.
 
-```
+# Usage
+This package registered all api endpoint you need, run `php artisan route:list` to see all available endpoints.
+
+| Method        | URI           | Action| Middleware |
+| ------------- |:-------------:| -----:| ---------: |
+| GET HEAD       | api/log | MailMerge\Http\Controllers\Api\MailLogsController@index |MailMerge\Http\Middleware\ApiAuth,MailMerge\Http\Middleware\ClientSwitcher |
+| POST      | api/logs/mailgun-webhook      |   MailMerge\Http\Controllers\Api\MailgunWebhookController@handle |Mailmerge\Http\Middleware\VerifyMailgunWebhook|
+| POST | api/logs/pepipost-webhook      |    MailMerge\Http\Controllers\Api\PepipostWebhookController@handle | |
+| POST | api/logs/sendgrid-webhook      |    MailMerge\Http\Controllers\Api\SendGridWebhookController@handle | |
+| POST | api/mails/batch      |    MailMerge\Http\Controllers\Api\SendBatchController@handle | MailMerge\Http\Middleware\ApiAuth,MailMerge\Http\Middleware\ClientSwitcher |
+| POST | api/mails/message      |    MailMerge\Http\Controllers\Api\SendMailMessageController@handle | MailMerge\Http\Middleware\ApiAuth,MailMerge\Http\Middleware\ClientSwitcher |
+| POST | mailmerge/resend-batch      |    MailMerge\Http\Controllers\ResendBatchController@handle | web,Illuminate\Auth\Middleware\Authenticate |   
+
 
 ## Authentication
 You must pass an authorization signature in headers when calling APIs.
