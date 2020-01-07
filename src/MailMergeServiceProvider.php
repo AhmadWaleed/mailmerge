@@ -2,6 +2,7 @@
 
 namespace MailMerge;
 
+use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use MailMerge\Http\Middleware\ApiAuth;
@@ -37,13 +38,20 @@ class MailMergeServiceProvider extends ServiceProvider
         $path = config('mailmerge.path');
         $middlewareGroup = config('mailmerge.middleware_group');
 
+        Route::namespace('MailMerge\Http\Controllers')
+            ->middleware([$middlewareGroup, Authenticate::class])
+            ->as('mailmerge.')
+            ->prefix($path)
+            ->group(function () {
+                Route::get('/resend-batch', 'ResendBatchController@handle')->name('batch.resend');
+            });
+
         Route::namespace('MailMerge\Http\Controllers\Api')
             ->prefix('api')
             ->group(function () {
                 Route::group(['middleware' => [ApiAuth::class, ClientSwitcher::class]], function () {
                     Route::post('mails/batch', 'SendBatchController@handle');
                     Route::post('mails/message', 'SendMailMessageController@handle');
-                    Route::post('mails/resend-batch', 'ResendBatchController@handle');
                     Route::get('logs', 'MailLogsController@index');
                 });
                 Route::group(['middleware' => VerifyMailgunWebhook::class], function () {
@@ -51,14 +59,6 @@ class MailMergeServiceProvider extends ServiceProvider
                 });
                 Route::post('logs/pepipost-webhook', 'PepipostWebhookController@handle');
                 Route::post('logs/sendgrid-webhook', 'SendGridWebhookController@handle');
-            });
-
-        Route::namespace('MailMerge\Http\Controllers')
-            ->middleware([$middlewareGroup, Authenticate::class])
-            ->as('mailmerge.')
-            ->prefix($path)
-            ->group(function () {
-                Route::get('/resend-batch', [DashboardController::class, 'index'])->name('dashboard.index');
             });
     }
 
@@ -71,12 +71,14 @@ class MailMergeServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
+                __DIR__.'/../resources/views' => resource_path('views/vendor/mailmerge'),
+            ], 'mailmerge-views');
+
+            $this->publishes([
                 __DIR__.'/../config/mailmerge.php' => config_path('mailmerge.php'),
             ], 'mailmerge-config');
         }
     }
-
-
 
     /**
      * Register any package services.

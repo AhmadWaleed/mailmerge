@@ -9,8 +9,14 @@ return [
     | change this path to anything you like.
     |
     */
-    'path' => env('MAILMERGE_PATH', 'wink'),
+    'path' => env('MAILMERGE_PATH', 'mailmerge'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | MailMerge Services Credentials
+    |--------------------------------------------------------------------------
+    |
+    */
     'services' => [
         'default' => env('DEFAULT_SERVICE', 'mailgun'),
         'mailgun' => [

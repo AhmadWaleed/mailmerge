@@ -34,7 +34,10 @@ php artisan mailmerge:migrate
 - Redis
 
 #Usage
-You can use any http client to make api calls but for simplicity we recommend [guzzle](https://github.com/guzzle/guzzle), you can install it by running `composer require guzzlehttp/guzzle`
+This package registered all api endpoint you need, run `php artisan route:list` to see all available endpoints.
+```
+
+```
 
 ## Authentication
 You must pass an authorization signature in headers when calling APIs.
