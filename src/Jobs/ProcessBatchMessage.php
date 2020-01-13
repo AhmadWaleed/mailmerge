@@ -3,7 +3,6 @@
 namespace MailMerge\Jobs;
 
 use MailMerge\Batch;
-use MailMerge\MailClient;
 use MailMerge\BatchMessage;
 use Illuminate\Support\Facades\Log;
 
@@ -16,14 +15,14 @@ class ProcessBatchMessage extends Job
 
     public BatchMessage $message;
 
-    public MailClient $mailClient;
+    public string $client;
 
     private bool $resending = false;
 
-    public function __construct(MailClient $mailClient, BatchMessage $message, bool $resending = false)
+    public function __construct(string $client, BatchMessage $message, bool $resending = false)
     {
+        $this->client = $client;
         $this->message = $message;
-        $this->mailClient = $mailClient;
         $this->resending = $resending;
     }
 
@@ -32,14 +31,27 @@ class ProcessBatchMessage extends Job
      */
     public function handle(): void
     {
-        $this->mailClient->sendBatch($this->message);
+        $mailClient = get_mail_client($this->client);
+
+        try {
+            $mailClient->sendBatch($this->message);
+        } catch (\Exception $exception) {
+            Log::critical('Batch message failed!', [
+                'client' => get_class($mailClient),
+                'message' => $this->message->toArray(),
+                'exception' => $exception->getMessage()
+            ]);
+
+            $this->fail($exception);
+        }
 
         if (! $this->resending) {
-            Batch::record($this->message, get_client_service($this->mailClient));
+            Batch::record($this->message, $mailClient->toString());
         }
 
         Log::debug('Batch mail proceed successfully.', [
-            'client' => get_class($this->mailClient)
+            'client' => get_class($mailClient),
+            'message' => $this->message->toArray(),
         ]);
     }
 }

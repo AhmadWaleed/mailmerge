@@ -31,4 +31,11 @@ class FakeClient implements MailClient
     {
         Assert::assertTrue(true);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function toString(): string
+    {
+    }
 }

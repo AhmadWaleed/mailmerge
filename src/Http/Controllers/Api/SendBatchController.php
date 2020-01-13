@@ -13,7 +13,7 @@ class SendBatchController
     public function handle(BatchRequest $request, MailClient $mailClient)
     {
         foreach ($request->batchMessages() as $batchMessage) {
-            dispatch(new ProcessBatchMessage($mailClient, $batchMessage));
+            dispatch(new ProcessBatchMessage($mailClient->toString(), $batchMessage));
         }
 
         return response()->json(['message' => 'Batch message processed successfully.']);

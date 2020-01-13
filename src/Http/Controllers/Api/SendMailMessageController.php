@@ -27,11 +27,7 @@ class SendMailMessageController
             return response()->json($e->errors(), $e->status);
         }
 
-        if ($mailClient instanceof PepipostClient) {
-            $mailClient->sendMessage($request->all());
-        } else {
-            dispatch(new ProcessMailMessage($mailClient, $request->all()));
-        }
+        dispatch(new ProcessMailMessage($mailClient->toString(), $request->all()));
 
         return response()->json(['message' => 'Email has been sent successfully.']);
     }

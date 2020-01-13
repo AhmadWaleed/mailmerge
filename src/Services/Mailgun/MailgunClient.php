@@ -11,7 +11,6 @@ use Mailgun\Mailgun;
 use MailMerge\BatchMessage;
 use Mailgun\Message\Exceptions\TooManyRecipients;
 use Mailgun\Model\Event\Event;
-use Spatie\TemporaryDirectory\TemporaryDirectory;
 
 class MailgunClient implements MailClient
 {
@@ -117,5 +116,10 @@ class MailgunClient implements MailClient
         $batchMessage->setToRecipients($recipients->toArray());
 
         $client->sendBatch($batchMessage);
+    }
+
+    public function toString(): string
+    {
+        return 'mailgun';
     }
 }

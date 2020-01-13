@@ -156,4 +156,9 @@ class PepipostClient implements MailClient
 
         $client->sendBatch($message);
     }
+
+    public function toString(): string
+    {
+        return 'pepipost';
+    }
 }

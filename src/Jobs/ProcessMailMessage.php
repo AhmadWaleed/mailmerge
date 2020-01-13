@@ -14,31 +14,35 @@ class ProcessMailMessage extends Job
 
     public array $message;
 
-    public MailClient $mailClient;
+    public string $client;
 
-    public function __construct(MailClient $mailClient, array $message)
+    public function __construct(string $client, array $message)
     {
+        $this->client = $client;
         $this->message = $message;
-        $this->mailClient = $mailClient;
     }
 
     /**
-     * Execute single message.
+     * Execute single mail message.
      */
     public function handle(): void
     {
+        $mailClient = get_mail_client($this->client);
+
         try {
-            $this->mailClient->sendMessage($this->message);
-        } catch (\Exception $e) {
+            $mailClient->sendMessage($this->message);
+        } catch (\Exception $exception) {
             Log::error("Failed to send email message:", [
-                'client' => get_class($this->mailClient),
+                'client' => get_class($mailClient),
                 'message' => $this->message,
-                'exception' => $e->getMessage()
+                'exception' => $exception->getMessage()
             ]);
+
+            $this->fail($exception);
         }
 
         Log::debug('Email message sent successfully.', [
-            'client' => get_class($this->mailClient),
+            'client' => get_class($mailClient),
             'message' => $this->message,
         ]);
     }

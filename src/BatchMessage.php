@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace MailMerge;
 
-class BatchMessage implements \Serializable
+use Illuminate\Contracts\Support\Arrayable;
+
+class BatchMessage implements \Serializable, Arrayable
 {
     protected string $from;
     protected string $subject;
@@ -120,15 +122,7 @@ class BatchMessage implements \Serializable
 
     public function serialize(): string
     {
-        return serialize([
-            'from' => $this->from,
-            'subject' => $this->subject,
-            'body' => $this->body,
-            'batchHash' => $this->batchHash,
-            'recipients' => $this->recipients,
-            'batchIdentifier' => $this->batchIdentifier,
-            'attachments' => $this->attachments,
-        ]);
+        return serialize($this->toArray());
     }
 
     public function unserialize($serialized): void
@@ -142,5 +136,18 @@ class BatchMessage implements \Serializable
         $this->recipients = $unserialized['recipients'];
         $this->batchIdentifier = $unserialized['batchIdentifier'];
         $this->attachments = $unserialized['attachments'];
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'from' => $this->from,
+            'subject' => $this->subject,
+            'body' => $this->body,
+            'batchHash' => $this->batchHash,
+            'recipients' => $this->recipients,
+            'batchIdentifier' => $this->batchIdentifier,
+            'attachments' => $this->attachments,
+        ];
     }
 }

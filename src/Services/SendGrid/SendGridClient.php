@@ -133,10 +133,15 @@ class SendGridClient implements MailClient
         $client->sendBatch($message);
     }
 
-    public function mapKeys(array $attributes): array
+    protected function mapKeys(array $attributes): array
     {
         return collect($attributes)->mapWithKeys(function ($value, $key) {
             return ["%{$key}%" => $value];
         })->toArray();
+    }
+
+    public function toString(): string
+    {
+        return 'sendgrid';
     }
 }

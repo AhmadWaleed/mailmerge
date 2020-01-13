@@ -34,4 +34,11 @@ interface MailClient
      * @return void
      */
     public function resendBatch(BatchMessage $message, MailClient $client, array $options = []): void;
+
+    /**
+     * String representation of mail client
+     *
+     * @return string
+     */
+    public function toString(): string;
 }
