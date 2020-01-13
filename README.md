@@ -61,7 +61,7 @@ MailMerge uses very simple authentication method all you have to do is pass an a
 
 * Api Endpoint
 ```
-http://domain/api/mails/batch
+/api/mails/batch
 ```
 
 * Example Request Parameters
@@ -132,3 +132,26 @@ http://domain/api/mails/batch
         $server_output = curl_exec($ch)
 ```
 
+
+<dl>
+  <dt>service</dt>
+  <dd>
+    You can spcify service in the api headers which you want to use for sending message
+    For example:
+    
+```php
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    "API-SERVICE: sendgrid", // suported (mailgun, pepipost, sendgrid)
+]);
+```
+   <dt>service</dt>
+   <DD>
+    MailMerge also allows you to add cc and bcc to your message, you can add those in your request body.
+    For example.
+    
+```json
+{
+    "cc": "cc1@example.com,cc2@example.com",
+    "bcc": "bcc1@example.com,bcc2@example.com",
+}
+```
