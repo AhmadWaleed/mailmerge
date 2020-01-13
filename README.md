@@ -104,32 +104,33 @@ MailMerge uses very simple authentication method all you have to do is pass an a
 * Example Code
 
 ```php
-      $payload = [
-            'from' => 'john.snow@thewall.north',
-            'recipients' => [
-                [
-                    'email' => 'john_doe@example.com',
-                    'attributes' => [
-                        'first' => 'john',
-                        'last' => 'doe'
-                    ],
-                ]
+$payload = [
+    'from' => 'john.snow@thewall.north',
+    'recipients' => [
+            [
+                'email' => 'john_doe@example.com',
+                'attributes' => [
+                'first' => 'john',
+                'last' => 'doe'
             ],
-            'subject' => 'Hi <%attribute.first%>',
-            'body' => 'This this test body with last name <%attribute.last%>.'
-        ];
+        ]
+    ],
+    'subject' => 'Hi <%attribute.first%>',
+    'body' => 'This this test body with last name <%attribute.last%>.'
+];
 
-        $ch = curl_init();
+$ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, "http://domain.com/api/mails/message");
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            "signature: 80PhN7Q3bQFSDFDSF333fYo7y6DLSSDDKKDK885dvFO4EFksA="
-        ]);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($payload));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_URL, "http://domain.com/api/mails/message");
+        
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    "signature: 80PhN7Q3bQFSDFDSF333fYo7y6DLSSDDKKDK885dvFO4EFksA="
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($payload));
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        $server_output = curl_exec($ch)
+$server_output = curl_exec($ch)
 ```
 
 
