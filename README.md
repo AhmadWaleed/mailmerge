@@ -50,11 +50,85 @@ This package registered all api endpoint you need, run `php artisan route:list` 
 
 
 ## Authentication
-You must pass an authorization signature in headers when calling APIs.
+MailMerge uses very simple authentication method all you have to do is pass an authorization signature in the request header.
 ```json
-"headers": {
+{
     "signature": "90gMPhN7Q3bQYJgFGZufYo7y6DLSSDDurEvFO4EFksA="
 }
 ```
 
-## Send Email Message
+## Send Batch Message
+
+* Api Endpoint
+```
+http://domain/api/mails/batch
+```
+
+* Example Request Parameters
+
+```json
+{ 
+   "recipients":[ 
+      { 
+         "email": "john.doe@example.com",
+         "attributes": {
+            "first":"John",
+            "last":"Doe",
+            "id":"1"
+         }
+      },
+      {
+        "email": "sally.doe@example.com",
+         "attributes": {
+            "first":"sally",
+            "last":"Doe",
+            "id":"2"
+         }
+      }
+   ],
+   "from":"janedoe@example.com",
+   "subject":"Hey <%attribute.first%>",
+   "body":"If you wish to unsubscribe,click https://domain.com/unsubscribe/<%attribute.id%>"
+}
+```
+
+* Example Response
+
+```json 
+{ 
+   "status":200,
+   "message":"Batch message processed successfully."
+}
+```
+
+* Example Code
+
+```php
+      $payload = [
+            'from' => 'john.snow@thewall.north',
+            'recipients' => [
+                [
+                    'email' => 'john_doe@example.com',
+                    'attributes' => [
+                        'first' => 'john',
+                        'last' => 'doe'
+                    ],
+                ]
+            ],
+            'subject' => 'Hi <%attribute.first%>',
+            'body' => 'This this test body with last name <%attribute.last%>.'
+        ];
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, "http://domain.com/api/mails/message");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "signature: 80PhN7Q3bQFSDFDSF333fYo7y6DLSSDDKKDK885dvFO4EFksA="
+        ]);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($payload));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $server_output = curl_exec($ch)
+```
+
