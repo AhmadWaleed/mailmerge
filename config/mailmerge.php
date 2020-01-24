@@ -37,14 +37,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Wink Middleware Group
+    | MailMerge Middleware Group
     |--------------------------------------------------------------------------
     |
-    | This is the middleware group that wink use.
-    | By default is the web group a correct one.
-    | It need at least the next middlewares
-    | - StartSession
-    | - ShareErrorsFromSession
+    | This is the middleware group that mailmerge uses for package web routes.
     |
     */
     'middleware_group' => env('MAILMERGE_MIDDLEWARE_GROUP', 'web'),
