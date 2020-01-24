@@ -1,6 +1,13 @@
 ## Introduction
 MailMerge is meant to provide a handful of APIs to send all sorts of emails including (batch mails, single mail) using different mail service providers such as mailgun, pepipost, and sendgrid. It also defines the strategy for resending the failed emails using different mail services.
 
+## Requirements
+- PHP >= 7.4
+- Laravel >= 6.0
+- Redis
+
+MailMerge uses redis for saving events and logs so you must have redis install on your host.
+
 ## Installation
 
 Add package in your composer.json repositories
@@ -28,12 +35,68 @@ Once Composer is done, run the following command, it will migrate mailmerge migr
 ```sh
 php artisan mailmerge:migrate
 ```
-## Requirements
-- PHP >= 7.4
-- Laravel >= 6.0
-- Redis
 
-MailMerge uses redis for saving events and logs so you must have redis install on your host.
+## Configuring the package
+
+You can publish the config file with:
+
+```bash
+php artisan vendor:publish --tag="mailmerge-config"
+```
+
+This is the contents of the file that will be published at `config/mailmerge.php`:
+
+```php
+<?php
+return [
+    /*
+    |--------------------------------------------------------------------------
+    | MailMerge Path
+    |--------------------------------------------------------------------------
+    |
+    | This is the URI prefix where Wink will be accessible from. Feel free to
+    | change this path to anything you like.
+    |
+    */
+    'path' => env('MAILMERGE_PATH', 'mailmerge'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | MailMerge Services Credentials
+    |--------------------------------------------------------------------------
+    |
+    */
+    'services' => [
+        'default' => env('DEFAULT_SERVICE', 'mailgun'),
+        'mailgun' => [
+            'api_key' => env('MAILGUN_API_KEY'),
+            'api_domain' => env('MAILGUN_API_DOMAIN'),
+            'api_endpoint' => env('MAILGUN_API_ENDPOINT', 'https://api.mailgun.net'),
+            'api_base_url' => env('MAILGUN_API_BASE_URL'),
+        ],
+        'pepipost' => [
+            'api_key' => env('PEPIPOST_API_KEY'),
+            'api_endpoint' => env('PEPIPOST_API_ENDPOINT'),
+        ],
+        'sendgrid' => [
+            'api_key' => env('SENDGRID_API_KEY'),
+            'api_endpoint' => env('SENDGRID_API_ENDPOINT'),
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | MailMerge Middleware Group
+    |--------------------------------------------------------------------------
+    |
+    | This is the middleware group that mailmerge uses for package web routes.
+    |
+    */
+    'middleware_group' => env('MAILMERGE_MIDDLEWARE_GROUP', 'web'),
+];
+```
+
+Please set your required env vars for all services specified in the config files. `'default' => env('DEFAULT_SERVICE', 'mailgun')` set this options for your default service which will be used when no service is is explictilry specified when using mailmerge api.
 
 # Usage
 This package registered all api endpoint you need, run `php artisan route:list` to see all available endpoints.
