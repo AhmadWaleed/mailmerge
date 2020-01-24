@@ -113,6 +113,12 @@ $payload = [
                 'first' => 'john',
                 'last' => 'doe'
             ],
+            [
+                'email' => 'jane_doe@example.com',
+                'attributes' => [
+                'first' => 'jane',
+                'last' => 'doe'
+            ]
         ]
     ],
     'subject' => 'Hi <%attribute.first%>',
@@ -145,8 +151,8 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
     "API-SERVICE: sendgrid", // suported (mailgun, pepipost, sendgrid)
 ]);
 ```
-   <dt>service</dt>
-   <DD>
+   <dt>cc, bcc</dt>
+   <dd>
     MailMerge also allows you to add cc and bcc to your message, you can add those in your request body.
     For example.
     
@@ -155,4 +161,35 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
     "cc": "cc1@example.com,cc2@example.com",
     "bcc": "bcc1@example.com,bcc2@example.com",
 }
+```
+   <dt>attachment</dt>
+   <dd>
+    Wtih MailMerge you can send one or more attachments with batch message.
+    
+```php
+$payload = ['https://site.com/uploads/sample1.pdf', 'https://site.com/uploads/sample2.pdf'];
+```
+<dl>
+
+* Batch Mail Template
+
+MailMerge uses its own email placeholdrer template for recipients custom attributes (variables) because of different integration of MSP so you don't have to worry about syntax different services.
+
+- Syntax
+`<% attribute.custom_attribute_name %>`
+- Example
+
+```
+'recipients' => [
+    [
+        'email' => 'jane_doe@example.com',
+        'attributes' => [
+        'id' => '1',
+        'first' => 'jane',
+        'last' => 'doe'
+    ]
+]
+```
+```
+Subject: Hey <%attribute.first%> <%attribute.last%>  <%attribute.id%>
 ```
