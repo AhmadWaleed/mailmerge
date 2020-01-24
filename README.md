@@ -193,3 +193,17 @@ MailMerge uses its own email placeholdrer template for recipients custom attribu
 ```
 Subject: Hey <%attribute.first%> <%attribute.last%>  <%attribute.id%>
 ```
+## Re-Send Batch Message
+
+* Api Endpoint
+```
+/resend-batch
+```
+Sending a batch message can be a time taking process on user end, it may take time for you to arrange all the recipents list that you want to send as batch message and what if your batch message failed so instead of doing all the havy work again again with MailMerge its now possible to resend your batch message using different service (mailgun, pepipost, sendgrid). MailMerge saves your all sent batch messages so you can retry that batch message in future in case of some system failure or if there are so many failed or bounced emails, when you retry or resend batch message it handle the logic of sending that batch message only for failed recipients from last batch so you can retry that batch message as many times as you want until all the emails from that batch are sent successfully.
+
+MailMerge provide a default view for handling your batch messages but you're free to modify it as per your need.
+You can run below command to publish MailMerge default view of resinding batch messages.
+```bash
+php artisan vendor:publish --tag='mailmerge-views' --force
+```
+Once the view is published you may find it inside `resources/views/vendors/mailmerge` directory.
