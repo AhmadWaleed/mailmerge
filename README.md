@@ -271,4 +271,41 @@ You can run below command to publish MailMerge default view of resinding batch m
 ```bash
 php artisan vendor:publish --tag='mailmerge-views' --force
 ```
-Once the view is published you may find it inside `resources/views/vendors/mailmerge` directory.
+Once the view is published you can find it inside `resources/views/vendors/mailmerge` directory.
+
+## Logging
+MailMerge provides centralized logging system for all supported email services using webhooks support, MailMerge register endpoint for each services so that you can add that url into your mail api webhook settings. You can find related docs for webhooks in following links: [mailgun](https://documentation.mailgun.com/en/latest/user_manual.html#webhooks), [pepipost](https://pepipost.com/features/webhooks/), [sendgrid](https://sendgrid.com/docs/for-developers/tracking-events/getting-started-event-webhook/).
+
+Whenever there is new log your mail service will hit that webhook url and MailMerge handle that request and saves that log into redis server.
+
+### Get Logs
+
+- Request Query Parameters
+
+- Items: (optional)
+```
+/api/logs?items=100
+```
+By default, the API will return 10 items but you can pass items param in a query to get items as per your need.
+
+- Service (required)
+```
+/api/logs?service=mailgun
+```
+* Response
+
+```
+{
+    'original_response': {
+        //..
+    },
+    'nomalized_response': {
+        //..
+    },
+}
+```
+- Original Response:
+    It include original payload from mail service.
+
+- Normalized Response: 
+    Normalized response that will be consistent across multiple services.
