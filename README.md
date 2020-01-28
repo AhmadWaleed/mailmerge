@@ -292,7 +292,7 @@ By default, the API will return 10 items but you can pass items param in a query
 ```
 /api/logs?service=mailgun
 ```
-* Response
+* Example Response
 
 ```
 {
