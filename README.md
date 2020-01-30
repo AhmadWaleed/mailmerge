@@ -131,10 +131,10 @@ MailMerge uses very simple authentication method all you have to do is pass an a
 
 ```json
 {
-    'from': 'john.snow@thewall.north',
-    'to': 'john.snow@behindthewall.north',
-    'subject': 'Hi John',
-    'body': 'The winters is comming...'
+    "from": "john.snow@thewall.north",
+    "to": "john.snow@behindthewall.north",
+    "subject": "Hi John",
+    "body": "The winters is comming..."
 }
 ```
 
