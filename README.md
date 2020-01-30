@@ -120,7 +120,58 @@ MailMerge uses very simple authentication method all you have to do is pass an a
 }
 ```
 
-## Send Batch Message
+## Send Single Email Message
+
+* Api Endpoint
+```
+/api/mails/message
+```
+
+* Example Request Parameters
+
+```json
+{
+    'from': 'john.snow@thewall.north',
+    'to': 'john.snow@behindthewall.north',
+    'subject': 'Hi John',
+    'body': 'The winters is comming...'
+}
+```
+
+* Example Response
+
+```json 
+{ 
+   "status":200,
+   "message":"Email has been sent successfully."
+}
+```
+
+* Example Code
+
+```php
+$payload = [
+    'from' => 'john.snow@thewall.north',
+    'to' => 'john.snow@behindthewall.north',
+    'subject' => 'Hi John',
+    'body' => 'The winters is comming...'
+];
+
+$ch = curl_init();
+
+curl_setopt($ch, CURLOPT_URL, "http://domain.com/api/mails/message");
+        
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    "signature: 80PhN7Q3bQFSDFDSF333fYo7y6DLSSDDKKDK885dvFO4EFksA=" // your auth signature here
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($payload));
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$server_output = curl_exec($ch)
+```
+
+## Send Batch (Bulk Emails) Message
 
 * Api Endpoint
 ```
@@ -190,7 +241,7 @@ $payload = [
 
 $ch = curl_init();
 
-curl_setopt($ch, CURLOPT_URL, "http://domain.com/api/mails/message");
+curl_setopt($ch, CURLOPT_URL, "http://domain.com/api/mails/batch");
         
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -219,18 +270,27 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
     MailMerge also allows you to add cc and bcc to your message, you can add those in your request body.
     For example.
     
-```json
-{
+```php
+$payload = [
+    // ...
     "cc": "cc1@example.com,cc2@example.com",
     "bcc": "bcc1@example.com,bcc2@example.com",
-}
+    // ...
+];
 ```
    <dt>attachment</dt>
    <dd>
     Wtih MailMerge you can send one or more attachments with batch message.
     
 ```php
-$payload = ['https://site.com/uploads/sample1.pdf', 'https://site.com/uploads/sample2.pdf'];
+$payload = [
+    // ...
+    'attachments' = [
+        'https://site.com/uploads/sample1.pdf',
+        'https://site.com/uploads/sample2.pdf'
+    ],
+    // ...
+];
 ```
 <dl>
 
