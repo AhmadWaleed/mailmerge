@@ -96,7 +96,7 @@ return [
 ];
 ```
 
-Please set your required env vars for all services specified in the config files. `'default' => env('DEFAULT_SERVICE', 'mailgun')` set this options for your default service which will be used when no service is is explictilry specified when using mailmerge api.
+Please set your required env vars for all services specified in the config files. `'default' => env('DEFAULT_SERVICE', 'mailgun')` set this options for your default service which will be used when no service is explicitly specified when using mailmerge api.
 
 # Usage
 This package registered all api endpoint you need, run `php artisan route:list` to see all available endpoints.
@@ -257,7 +257,7 @@ $server_output = curl_exec($ch)
 <dl>
   <dt>service</dt>
   <dd>
-    You can spcify service in the api headers which you want to use for sending message
+    You can specify service in the api headers which you want to use for sending message
     For example:
     
 ```php
@@ -280,7 +280,7 @@ $payload = [
 ```
    <dt>attachment</dt>
    <dd>
-    Wtih MailMerge you can send one or more attachments with batch message.
+    With MailMerge you can send one or more attachments with batch message.
     
 ```php
 $payload = [
@@ -296,7 +296,7 @@ $payload = [
 
 * Batch Mail Template
 
-MailMerge uses its own email placeholdrer template for recipients custom attributes (variables) because of different integration of MSP so you don't have to worry about syntax different services.
+MailMerge uses its own email placeholder template for recipients custom attributes (variables) because of different integration of MSP so you don't have to worry about syntax different services.
 
 - Syntax
 `<% attribute.custom_attribute_name %>`
@@ -322,12 +322,12 @@ Subject: Hey <%attribute.first%> <%attribute.last%>  <%attribute.id%>
 ```
 /resend-batch
 ```
-Sending a batch message can be a time taking task on user end, it may take time for you to arrange all the recipents list that you want to send as batch message and what if your batch message failed so instead of doing all the havy work again and again with MailMerge its now possible to resend your batch message using different service (mailgun, pepipost, sendgrid). MailMerge saves all of your sent batch messages so you can retry that batch message in future in case of some system failure or if there are so many failed or bounced emails, when you retry or resend batch message it handle the logic of sending that batch message only for failed recipients from last batch so you can retry that batch message as many times as you want until all the emails from that batch are sent successfully.
+Sending a batch message can be a time taking task on user end, it may take time for you to arrange all the recipents list that you want to send as batch message and what if your batch message failed so instead of doing all the heavy work again and again with MailMerge its now possible to resend your batch message using different service (mailgun, pepipost, sendgrid). MailMerge saves all of your sent batch messages so you can retry that batch message in future in case of some system failure or if there are so many failed or bounced emails, when you retry or resend batch message it handle the logic of sending that batch message only for failed recipients from last batch so you can retry that batch message as many times as you want until all the emails from that batch are sent successfully.
 
 MailMerge provide a default view for handling your batch messages.
 ![resend batch message default view](https://lh3.googleusercontent.com/j9voc8ErhsRqlUDXQdFIubbDmAe_Kjr75uAiQjgKAViqNRj_WtwPQgzxICg2A5h0yIkcAcQUhhbox1dpkikNSMWsLOZ-fcCeIlYiGbHjJ6En1Sli6ek1fNQm5Zcs7vwylGq60_jUeO6OsBZUucjbAjI9gphaKCZ9RQPGBT6LL38Ac5DT1oO1zBNRudqky2RMwZr7H-QextqLudS5_8Cr6lunJrJQboaqbz5q1aeL7ma4SS8fzocr4bqT_Ba0r2WZAoSVPIZyv-fAyQ8m09PJU3L4E_671mFNulnMY0E-3WqBkuLIIaOL40RcSUKJ_bzSlNTfL2mfFhlg1DX8ozKDUc1avQZENjjAS7a2ZNHW6LCMAexiGTUZruPNXjkxpoDGIhxDHMki9znuRhmWnRqW8-u_wP2Y0wkf3KagPxbnI30-vqMihN3CmTzsVhq801Sy8JlaPi635SYXCfSfnRTEbF21nkraNl4QE7NOhGWpHvIeC-YgSV9d8EyfsBzJhVxkLHVHV_J9GmJuNZiAkcdHH78c6cldftZpE1YjqIOVM9h2ya7uqLQgwfxXjVnKwPbWZMrdRuKhJckvwhKgmcPnlO7hkAi0FY5NWlLMCvQuTswBskw2VLeTEiQKDLdIWs5872VUxDDnIfioHnkhYPJu_y__uCAZctvYLJd4THBaHLauH_r1TwHpwFZlWsZbNgjxXxOyW7L9yRkAHIA1dHxt-lkLbWvb7Qh2Ll5irU8N3heJ_vg=w888-h306-no)
 but you're free to modify it as per your need.
-You can run below command to publish MailMerge default view of resinding batch messages.
+You can run below command to publish MailMerge default view of resending batch messages.
 ```bash
 php artisan vendor:publish --tag='mailmerge-views' --force
 ```
