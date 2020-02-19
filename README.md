@@ -9,24 +9,8 @@ MailMerge is meant to provide a handful of APIs to send all sorts of emails incl
 MailMerge uses redis for saving events and logs so you must have redis install on your host.
 
 ## Installation
-
-Add package in your composer.json repositories
-
-```
-"repositories": [
-    {
-        "type": "path",
-        "url": "./path-to-your-local-package"
-    }
-]
-```
-
-now add package in your composer.json require packages and run `composer update`
-
 ```sh
-"require": {
-    "ahmedwaleed/mailmerge": "dev-master"
-},
+composer require ahmedwaleed/mailmerge
 ```
 MailMerge will automatically register itself using [package discovery](https://laravel.com/docs/packages#package-discovery).
 
