@@ -356,4 +356,4 @@ By default, the API will return 10 items but you can pass items param in a query
 
 ## License
 
-Intervention Image is licensed under the [MIT License](http://opensource.org/licenses/MIT).
+MailMerge is licensed under the [MIT License](http://opensource.org/licenses/MIT).
