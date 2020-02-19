@@ -9,24 +9,8 @@ MailMerge is meant to provide a handful of APIs to send all sorts of emails incl
 MailMerge uses redis for saving events and logs so you must have redis install on your host.
 
 ## Installation
-
-Add package in your composer.json repositories
-
-```
-"repositories": [
-    {
-        "type": "path",
-        "url": "./path-to-your-local-package"
-    }
-]
-```
-
-now add package in your composer.json require packages and run `composer update`
-
 ```sh
-"require": {
-    "ahmedwaleed/mailmerge": "dev-master"
-},
+composer require ahmedwaleed/mailmerge
 ```
 MailMerge will automatically register itself using [package discovery](https://laravel.com/docs/packages#package-discovery).
 
@@ -369,3 +353,7 @@ By default, the API will return 10 items but you can pass items param in a query
 
 - Normalized Response: 
     Normalized response that will be consistent across multiple services.
+
+## License
+
+Intervention Image is licensed under the [MIT License](http://opensource.org/licenses/MIT).
