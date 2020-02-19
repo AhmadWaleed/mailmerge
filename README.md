@@ -369,3 +369,7 @@ By default, the API will return 10 items but you can pass items param in a query
 
 - Normalized Response: 
     Normalized response that will be consistent across multiple services.
+
+## License
+
+Intervention Image is licensed under the [MIT License](http://opensource.org/licenses/MIT).
