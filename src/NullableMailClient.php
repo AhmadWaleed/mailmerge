@@ -24,4 +24,12 @@ class NullableMailClient implements MailClient
     public function resendBatch(BatchMessage $message, MailClient $client, array $options = []): void
     {
      }
+
+    /**
+     * @inheritDoc
+     */
+    public function toString(): string
+    {
+
+    }
 }
